@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.crud.user import CRUDUser
-from app.schemas.user import CreateUser, AuthKeyUser
+from app.schemas.user import CreateUser, AuthKeyUser, FirstLoginResponce, FirstLoginChangePassword
 from app.core.config import config
+from app.auth import AuthService
 
 
 
@@ -42,6 +43,27 @@ def create_user(data:CreateUser, db:Session=Depends(get_db)):
         
     user =  crud_user.create_user(db, data)
     return {"message":"Пользователь создан"}
+
+@router.post("/first_login", response_model=FirstLoginResponce)
+def first_login(data:FirstLoginChangePassword, db:Session=Depends(get_db)):
+    user = crud_user.get_by_email(db, data.email)
+    if not user:
+        return HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Такой пользователь уже есть")
+    
+    if not AuthService.verify_password(data.password, user.hashed_password):
+        return HTTPException(status.HTTP_401_UNAUTHORIZED, detail = "Неверный емайл или пароль")
+    
+    if not user.must_change_password:
+        return HTTPException(status.HTTP_400_BAD_REQUEST, detail = "Пароль уже был изменен")
+    
+    user.hashed_password = AuthService.get_password_hash(data.new_password)
+    user.must_change_password = False
+    db.commit()
+    return FirstLoginResponce(
+        message = "Пароль успешно изменен",
+        success = True,
+    )
+
 
 
     

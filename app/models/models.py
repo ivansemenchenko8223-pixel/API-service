@@ -12,4 +12,6 @@ class User(Base):
     full_name = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), default=datetime.now())
+    must_change_password = Column(Boolean, default = True)
+    
     

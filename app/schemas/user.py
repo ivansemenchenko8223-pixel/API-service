@@ -24,5 +24,17 @@ class UserResponse(BaseModel):
     hashed_password:str
     created_at: datetime
 
+class ChangePassword(BaseModel):
+    ...
+
+class FirstLoginResponce(BaseModel):
+    message:str
+    success:bool
+
+class FirstLoginChangePassword(BaseModel):
+    email:EmailStr
+    password:str
+    new_password:str
+
     
 

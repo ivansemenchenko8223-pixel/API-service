@@ -6,6 +6,7 @@ import datetime
 from typing import Dict, List, Optional
 from app.core.config import config
 from sqlalchemy.orm import Session
+import string
 
 
 
@@ -42,6 +43,13 @@ class AuthService:
             del active_session[token]
             return True
         return False
+    
+    @staticmethod
+    def generate_password():
+        alphabet = string.ascii_letters + string.digits + "!@?"
+        password = "".join(secrets.choice(alphabet) for _ in range(12))  
+        return password
+
     
 
 
