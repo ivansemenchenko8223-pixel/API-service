@@ -5,6 +5,8 @@ from app.crud.user import CRUDUser
 from app.schemas.user import CreateUser, AuthKeyUser, FirstLoginResponce, FirstLoginChangePassword
 from app.core.config import config
 from app.auth import AuthService
+from fastapi.responses import HTMLResponse
+import os
 
 
 
@@ -12,6 +14,21 @@ router = APIRouter()
 
 
 crud_user = CRUDUser()
+
+
+@router.get("/", response_class=HTMLResponse, tags=["Фронтенд"])
+def serve_frontend():
+    """
+    Этот эндпоинт просто читает файл index.html и отдает его в браузер
+    """
+    # Укажи правильный путь к файлу index.html, если он лежит в другой папке
+    file_path = "index.html" 
+
+    if not os.path.exists(file_path):
+        return "<h1>Файл index.html не найден!</h1>"
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        return f.read()
 
 
 @router.post("/auth_with_key", status_code=status.HTTP_200_OK)
@@ -28,7 +45,7 @@ def auth_with_key(user_data:AuthKeyUser, db:Session=Depends(get_db)):
             "email": user.email,
             "job_title":user.job_title,
             "full_name": user.full_name,
-            "password":user.hashed_password
+            #"password":user.hashed_password
             }
 
 
@@ -48,13 +65,13 @@ def create_user(data:CreateUser, db:Session=Depends(get_db)):
 def first_login(data:FirstLoginChangePassword, db:Session=Depends(get_db)):
     user = crud_user.get_by_email(db, data.email)
     if not user:
-        return HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Такой пользователь уже есть")
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail="Такой пользователь уже есть")
     
-    if not AuthService.verify_password(data.password, user.hashed_password):
-        return HTTPException(status.HTTP_401_UNAUTHORIZED, detail = "Неверный емайл или пароль")
+    #if not AuthService.verify_password(data.password, user.hashed_password):
+        #raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail = "Неверный емайл или пароль")
     
     if not user.must_change_password:
-        return HTTPException(status.HTTP_400_BAD_REQUEST, detail = "Пароль уже был изменен")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail = "Пароль уже был изменен")
     
     user.hashed_password = AuthService.get_password_hash(data.new_password)
     user.must_change_password = False

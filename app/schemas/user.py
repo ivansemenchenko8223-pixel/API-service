@@ -33,7 +33,7 @@ class FirstLoginResponce(BaseModel):
 
 class FirstLoginChangePassword(BaseModel):
     email:EmailStr
-    password:str
+    #password:str
     new_password:str
 
     

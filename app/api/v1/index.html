@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления API</title>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=VIHBvgNmWwyFUPEt2z-5JOza1JmSCc2XXzQRxVYJiVDeNuyNx5cHtKa9_KIhEbU4bdPTynT21HL9LEuijZIWK6v5rghRWdWhNquYU8Izm9ZlFlekFxH_jpibrth7zQZ447Mt4f3RyKkdBQ6M4YCuZYzVY5rT419l5T60zqpqcAqNaNvxX8ssYCsQ5XRNjVW-tCbKFbiCkn283ujUIgTaYpqY9R3o0MauoV9RF3ir362NB8ZmQDV7PtWptgGaLbD4OdCKy7AvRvfs5Jz-L1ppgyQCkS0icJIb4EecuNONOTYvjvCLZ_3FXanxYRWrm-RFTFjiy2jlIKGsUVXxlBpNavWutxXf9Nzz0I4zbmxMS3vl86QO3OJE7Is2hP4pQW7I6WChLwD10P8jBDxnhX19jWwkoczQpmxOmX8XocNq59Uhz8CCl8e1-e9TuxYRaze9NR-cap6EoMpyXzcox-DvJmLjvn-JixuBN6QmcTvg5pthNENRQsrBA73tKIWgNZGRUCyQofOiLDazbwyK2YtgmLwxkK0qWynkMbe0zv5wO0obMKD9Nqzis7EQYivOj-mRdxW51YD_RuixAnCtOKNIMlyGbWjkfpWN-1f1ZoVFM4acFwtAgZxchwXsxtPPYxKiwRLEvSEq9mgss-8Eos9OzqDJ8rK2B_nu3MrYlRRtg4BuK9O7Yxf7RaE7Ys3AfkOgQVIDupYbceNS_ZSrD90oWqNmo4mQjhj6pyBiaj-L1_b2qSz3MIZs2FLvfGwH4BczjlO-LRaHSDzTwUrfmj56-huE2Ug2TZzSN9Ne6uFkHpF1FldS4XY0Qfl1sJxE8XQvITHnK7vMCDQGsbEbERSvfg" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Небольшая анимация для уведомлений */
+        .toast-enter { transform: translateY(100%); opacity: 0; }
+        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen p-6 md:p-12">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-slate-900">Система аутентификации</h1>
+            <p class="text-slate-500 mt-2">Управление пользователями и доступ</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-600">Создать пользователя</h2>
+                <form id="createUserForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Admin Key</label>
+                        <input type="password" id="adminKey" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email нового пользователя</label>
+                        <input type="email" id="createEmail" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Временный пароль</label>
+                        <input type="password" id="createPassword" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition">Создать</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-semibold mb-4 text-emerald-600">Первый вход</h2>
+                <form id="firstLoginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" id="firstLoginEmail" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Текущий пароль</label>
+                        <input type="password" id="firstLoginPassword" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Новый пароль</label>
+                        <input type="password" id="firstLoginNewPassword" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg transition">Сменить пароль</button>
+                </form>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h2 class="text-xl font-semibold mb-4 text-amber-600">Вход по Secret Key</h2>
+                <form id="authKeyForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <input type="email" id="authEmail" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Secret Key</label>
+                        <input type="password" id="authKey" required class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition">
+                    </div>
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2 rounded-lg transition">Войти</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div id="userDataResult" class="mt-8 hidden bg-slate-800 text-white p-6 rounded-2xl shadow-lg">
+            <h3 class="text-lg font-semibold mb-2">Данные пользователя:</h3>
+            <pre id="jsonOutput" class="text-sm text-green-400 overflow-x-auto"></pre>
+        </div>
+
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 max-w-sm w-full bg-white border-l-4 p-4 rounded shadow-lg hidden">
+        <p id="toastMessage" class="font-medium text-slate-800"></p>
+    </div>
+
+    <script>
+        // Замените на URL вашего бэкенда, если он отличается
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // Функция для отображения красивых уведомлений
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            
+            toast.classList.remove('hidden', 'border-red-500', 'border-green-500');
+            toast.classList.add(isError ? 'border-red-500' : 'border-green-500');
+            toastMsg.textContent = message;
+            
+            setTimeout(() => { toast.classList.add('hidden'); }, 4000);
+        }
+
+        // Универсальная функция для отправки запросов
+        async function sendRequest(endpoint, payload) {
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Произошла ошибка');
+                }
+                return { success: true, data };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // 1. Обработка создания пользователя
+        document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                admin_key: document.getElementById('adminKey').value,
+                user_data: {
+                    email: document.getElementById('createEmail').value,
+                    password: document.getElementById('createPassword').value
+                    // При необходимости добавьте full_name и job_title
+                }
+            };
+            
+            const res = await sendRequest('/create_user', payload);
+            if (res.success) showToast(res.data.message || 'Пользователь создан!');
+            else showToast(res.error, true);
+        });
+
+        // 2. Обработка первого входа (смена пароля)
+        document.getElementById('firstLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                email: document.getElementById('firstLoginEmail').value,
+                password: document.getElementById('firstLoginPassword').value,
+                new_password: document.getElementById('firstLoginNewPassword').value
+            };
+            
+            const res = await sendRequest('/first_login', payload);
+            if (res.success) showToast(res.data.message || 'Пароль успешно изменен!');
+            else showToast(res.error, true);
+        });
+
+        // 3. Обработка входа по ключу
+        document.getElementById('authKeyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                email: document.getElementById('authEmail').value,
+                key: document.getElementById('authKey').value
+            };
+            
+            const res = await sendRequest('/auth_with_key', payload);
+            if (res.success) {
+                showToast(res.data.message || 'Успешная авторизация!');
+                const resultDiv = document.getElementById('userDataResult');
+                const jsonOutput = document.getElementById('jsonOutput');
+                
+                resultDiv.classList.remove('hidden');
+                jsonOutput.textContent = JSON.stringify(res.data, null, 2);
+            } else {
+                showToast(res.error, true);
+            }
+        });
+    </script>
+</body>
+</html>

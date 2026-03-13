@@ -17,7 +17,7 @@ class CRUDUser:
             email = user_data.user_data.email,
             job_title = user_data.user_data.job_title,
             full_name = user_data.user_data.full_name,
-            hashed_password = user_data.user_data.password,
+            hashed_password = AuthService.get_password_hash(user_data.user_data.password),
             must_change_password = True 
         )
         db.add(user_obj)
