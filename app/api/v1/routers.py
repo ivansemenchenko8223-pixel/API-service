@@ -22,7 +22,7 @@ def serve_frontend():
     Этот эндпоинт просто читает файл index.html и отдает его в браузер
     """
     # Укажи правильный путь к файлу index.html, если он лежит в другой папке
-    file_path = "index.html" 
+    file_path = "app/api/v1/index.html" 
 
     if not os.path.exists(file_path):
         return "<h1>Файл index.html не найден!</h1>"

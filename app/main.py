@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from app.api.v1.routers import router
 from app.database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 
 Base.metadata.create_all(bind=engine)
@@ -9,6 +10,8 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="API для получения секретного ключа сотрудника",
     version="1.0.0")
+
+app.mount("/static", StaticFiles(directory="app/api/v1"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
